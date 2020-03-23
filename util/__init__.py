@@ -1,6 +1,6 @@
 """
-    This package contains 3 classes that provide methods for simulating the experiment. and calculating the stats of
-    each trial.
+This package contains 3 classes that provide methods for simulating the experiment. and calculating the stats of
+each trial.
 """
 
 import numpy as np
@@ -22,8 +22,8 @@ switch_stat = np.zeros((4, 4))
 
 class Experiment:
     """
-        EXPERIMENT Class:
-        Methods:  1. deal_card 2. check_criteria 3.change criteria
+    Provides functions to simulate the experiment
+    Methods:  1. deal_card 2. check_criteria 3.change criteria
     """
     @staticmethod
     def start(crit_order=[], pile_order=[]):
@@ -98,13 +98,13 @@ criterions = [0, 1, 2, 3]
 
 class Subject:
     """
-        SUBJECT:
-            Methods:    1. pick_criteria(lastCrit): arbitrarily selects a criterion and spits it out as criteria_focus
-                        2. pick_suitable_pile(curCard, criteriaFocus): simulates searching for and placing your current
-                            card on a suitable pile based on the current criterion focus, and returns:
-                                A. The selected pile.
-                                B. The alternative possible criterion(in cases where current picked criterion is only
-                                    giving a false-correct feedback.
+    Provides functions to simulate tasks done on a subjects side.
+    Methods:    1. pick_criteria(lastCrit): arbitrarily selects a criterion and spits it out as criteria_focus
+                2. pick_suitable_pile(curCard, criteriaFocus): simulates searching for and placing your current
+                card on a suitable pile based on the current criterion focus, and returns:
+                    A. The selected pile.
+                    B. The alternative possible criterion(in cases where current picked criterion is only
+                        giving a false-correct feedback.
     """
     @staticmethod
     def pick_criteria(lastCrit: int = 4):
@@ -149,8 +149,7 @@ class Subject:
 
 class Statistics:
     """
-        STATISTICS:
-            Tools to calculate the statistics of each trial
+    Provides functions to calculate the statistics of each trial
     """
 
     @staticmethod
@@ -185,13 +184,13 @@ class Statistics:
         Prints out the results of the statistics
         :return: None
         """
-        print("Start Trials And Stats: ")
+        print("Start Trials: ")
         print(start_trials)
-        print("Start Stats: ")
+        print("\nStart Stats: ")
         print(start_stat)
-        print("Switch Trials: ")
+        print("\nSwitch Trials: ")
         print(switch_trials)
-        print("Switch Stats: ")
+        print("\nSwitch Stats: ")
         print(switch_stat)
 
 
