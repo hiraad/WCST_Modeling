@@ -15,9 +15,11 @@ curCrit = 6
 
 global curCard
 start_trials = np.zeros((4, 1))
-start_stat = np.zeros((4, 1))
+start_stat = {"0": [], "1": [], "2": [], "3": []}
 switch_trials = np.zeros((4, 4))
-switch_stat = np.zeros((4, 4))
+switch_stat = {"0_1": [], "0_3": [], "1_0": [], "1_2": [], "2_1": [], "2_3": [], "3_0": [], "3_2": []}
+start_means = []
+start_std = []
 
 
 class Experiment:
@@ -84,9 +86,10 @@ class Experiment:
         :return: The new criterion (:int)
         """
         global crit
-        if crit < len(criteriaList):
+        global criteriaList
+        if crit < len(criteriaList)-1:
             crit += 1
-            print("Criterion changed! Currently: " + str(crit))
+            # print("Criterion changed To: " + str(criteriaList[crit]))
             return crit
         else:
             crit += 1
@@ -170,13 +173,24 @@ class Statistics:
         global switch_stat
         global switch_trials
         if post != -1:
-            print("SWIIIITCH!")
+            key = str(prior) + "_" + str(post)
             switch_trials[prior][post] += 1
-            switch_stat[prior][post] = tries
+            switch_stat[key].append(tries)
         else:
-            print("STAAAART!")
+            key = str(prior)
             start_trials[prior][0] += 1
-            start_stat[prior][0] = tries
+            start_stat[key].append(tries)
+
+    @staticmethod
+    def record_means():
+        global start_means
+        global start_std
+        start_means = [np.mean(tries) for key, tries in start_stat.items()]
+        start_std = [np.std(tries, ddof=1) for key, tries in start_stat.items()]
+        switch_means = [np.mean(tries) for key, tries in switch_stat.items()]
+        switch_std = [np.std(tries, ddof=1) for key, tries in switch_stat.items()]
+        return start_means, start_std, switch_means, switch_std
+
 
     @staticmethod
     def results():
@@ -184,14 +198,13 @@ class Statistics:
         Prints out the results of the statistics
         :return: None
         """
-        print("Start Trials: ")
-        print(start_trials)
-        print("\nStart Stats: ")
-        print(start_stat)
-        print("\nSwitch Trials: ")
-        print(switch_trials)
-        print("\nSwitch Stats: ")
-        print(switch_stat)
+        stMean, stStd, swMean, swStd  = Statistics.record_means()
+        print("Start Trials: \n" + str(start_trials))
+        print("Start Means: " + str(stMean))
+        print("Start Deviations:\n" + str(stStd))
+        print("\nSwitch Trials: \n" + str(switch_trials))
+        print("Switch Mean: "+ str(swMean))
+        print("Switch Deviations:\n" + str(swStd))
 
 
 

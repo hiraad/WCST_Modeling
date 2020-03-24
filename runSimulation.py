@@ -9,11 +9,9 @@ pile_order = conditions_json[1]["Target_Order"]
 deck_order = conditions_json[2]["Card_Order"]
 
 
-print(len(criterion_order))
-print(len(pile_order))
-print(len(deck_order))
-
-for i in range(3):
-
+for i in range(len(deck_order)):
+    print("SUBJECT: " + str(i + 1))
     outperform.simulate(deck_order[i], criterion_order[i], pile_order[i])
-    Statistics.results()
+
+
+Statistics.results()

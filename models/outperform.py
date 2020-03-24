@@ -62,28 +62,28 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
 
     for i, card in enumerate(card_stack):
         if strike == 10:
-            print("TOTAL STREAKS: " + str(streaks+1))
+            # print("TOTAL STREAKS: " + str(streaks+1))
             prior = criteria_list[crit]
             crit = Experiment.change_criteria()
-            if crit == len(crit_order):
-                print("\n   ALL CRITERIONS SORTED, TASK IS DONE! \n")
-                break  # break if all the criterions to check have been sorted to
             if not streaks:
                 post = -1
                 tries = i - 10
                 start = prior
             elif streaks == 1:
+                post = prior
                 prior = start
-                post = criteria_list[crit]
                 tries = (i - 10) - prior_streak
             else:
                 prior = post
-                post = criteria_list[crit]
+                post = criteria_list[crit-1]
                 tries = (i - 10) - prior_streak
 
             Statistics.record(tries, prior, post)
-            print("Prior: " + str(prior) + ", Post: " + str(post) + ", NumberOfTries: " + str(tries) + "\n")
             streaks += 1
+            # print("Prior: " + str(prior) + ", Post: " + str(post) + ", NumberOfTries: " + str(tries) + "\n")
+            if crit == len(crit_order):
+                print("ALL CRITERIA SORTED, TASK IS DONE!")
+                break  # break if all the criteria to check have been sorted to
             prior_streak = i
 
         cur_card = Experiment.deal_card(card)
@@ -96,8 +96,8 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
             response = Experiment.check_criteria(cur_card, selected_pile)
             rec(cur_card, crit_focus, selected_pile, response)
             cur_crit = criteria_list[crit]
-            print("Run " + str(i) + ": [Case: 'CritFound', Response: '" + str(response) + "', DemandedCriterion: '" +
-                  str(cur_crit) + "']")
+            # print("Run " + str(i) + ": [Case: 'CritFound', Response: '" + str(response) + "', DemandedCriterion: '" +
+            #       str(cur_crit) + "']")
             if not response:
                 # Possible add remove the criteria that ended in the strike from the list!
                 strike = 0
@@ -109,12 +109,12 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
             response = Experiment.check_criteria(cur_card, selected_pile)
             rec(cur_card, crit_focus, selected_pile, response)
             cur_crit = criteria_list[crit]
-            print("Run " + str(i) + ": [Case: 'AlternateCheck', Response: '" + str(response) + "', DemandedCriterion: '"
-                  + str(cur_crit) + "']")
+            # print("Run " + str(i) + ": [Case: 'AlternateCheck', Response: '" + str(response) +
+            # "', DemandedCriterion: '" + str(cur_crit) + "']")
             if response:
                 strike += 1
-            else:
-                print("This is so wrong now!")
+            # else:
+                # print("This is so wrong now!")
             crit_confusion = False
         else:
             if response:
@@ -122,10 +122,10 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
                 results[0] += 1
                 selected_pile = Subject.pick_suitable_pile(cur_card, crit_focus)[0]
                 second_response = Experiment.check_criteria(cur_card, selected_pile)
-                rec(cur_card, crit_focus, selected_pile, response)
+                rec(cur_card, crit_focus, selected_pile, second_response)
                 cur_crit = criteria_list[crit]
-                print("Run " + str(i) + ": [Case: 'SecondCheck', Response: '" + str(second_response) +
-                      "', DemandedCriterion: '" + str(cur_crit) + "']")
+                # print("Run " + str(i) + ": [Case: 'SecondCheck', Response: '" + str(second_response) +
+                #       "', DemandedCriterion: '" + str(cur_crit) + "']")
                 if second_response:
                     # Case: Criteria was correct twice --> You've found the criteria
                     strike += 1
@@ -145,8 +145,8 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
                 response = Experiment.check_criteria(cur_card, selected_pile)
                 rec(cur_card, crit_focus, selected_pile, response)
                 cur_crit = criteria_list[crit]
-                print("Run " + str(i) + ": [Case: 'Guess Criterion', Response: '" + str(response) + "', 'DemandedCrit: "
-                      + str(cur_crit) + "']")
+                # print("Run " + str(i) + ": [Case: 'Guess Criterion', Response: '" + str(response) +
+                # "', 'DemandedCrit: " + str(cur_crit) + "']")
                 if response:
                     strike += 1
                 else:
@@ -154,4 +154,5 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
 
         exp_results.append(record)
         i += 1
-        print(" SUBJECT:" + str(record) + "\n [CurStreak:" + str(strike) + "]\n")
+        # print(" SUBJECT:" + str(record) + "\n [CurStreak:" + str(strike) + "]\n")
+    print("Total Streaks = " + str(streaks) +" \n" )
