@@ -1,3 +1,6 @@
+from util import Experiment, Subject, Statistics
+from random import randrange
+import numpy as np
 """
 CardsKeys:
 
@@ -5,15 +8,20 @@ CardsKeys:
     1: Blue		1: Empty	1: Contain  		1: Top
     2: Red		2: Full	    2: Partial overlap	2: Middle
     3: Yellow	3: Semi	    3: Disconnected		3: Bottom
-"""
 
-attention_weight = [0.25, 0.25, 0.25, 0.25]
-signal = [0, 0, 0, 0]
+Free Parameters: 
 
-feedback = [0, 0, 0, 0]
+    r = Rapidness of Attention Shifts toward feedback signals in reward trials
+    [ranges from "0" to "1" | From "No" to "Complete" attention shifts respectively]
+    p = Rapidness of Attention Shifts in punishment trials [same range as "r" | Higher value = better performance]
+    d = Decision consistency parameter [Ranges .01 <= d <= 5 | Lower = More Random vs. Higher =  More Consistent Choice]
+    f = Attentional Focus [Ranges "0.01" to "5" | 
+        f ⇾ 0 = Even split of attention between dimensions given a signal;
+        Higher (f = 1) = Proportional split of attention between dimensions;
+        f ⇾ ∞ = Maximum attention shift to element that is consistent with the feedback.]
 
-"""
-    
+Implement: 
+
     Unambiguous Rewarded Signal Vector:
         Indicates that given a "Correct" (unambiguous) signal attention should now shift towards a particular criterion.
         s[t] = m[t][k]
@@ -40,24 +48,64 @@ feedback = [0, 0, 0, 0]
         where h ranges between "1" to "4" for summation across all dimensions forcing feedback signal to add up to 1.
     
 """
+record: {}
 
 
-"""
-Free Parameters: 
+def rec(card, criteria, pile, match):
+    """
+    Records the Subjects card and choices in each step of the experiment (Not to be confused with record in statistics)
+    :param card: Card in hand
+    :param criteria: Criterion chosen in this step
+    :param pile: Pile that the subject lands the card
+    :param match: Response from the experiment (Match, No-Match)
+    :return: None
+    """
+    global record
+    record["Card"] = card
+    record["Criterion"] = criteria
+    record["Pile"] = pile
+    record["Match"] = match
 
-    r = Rapidness of Attention Shifts toward feedback signals in reward trials
-    [ranges from "0" to "1" | From "No" to "Complete" attention shifts respectively]
-    p = Rapidness of Attention Shifts in punishment trials [same range as "r" | Higher value = better performance]
-    d = Decision consistency parameter [Ranges .01 <= d <= 5 | Lower = More Random vs. Higher =  More Consistent Choice]
-    f = Attentional Focus [Ranges "0.01" to "5" | 
-        f ⇾ 0 = Even split of attention between dimensions given a signal;
-        Higher (f = 1) = Proportional split of attention between dimensions;
-        f ⇾ ∞ = Maximum attention shift to element that is consistent with the feedback.]
-    
-"""
+
+def crit_focus(attention_weight: []):
+    mx = max(attention_weight)
+    mx_ind = [i for i, w in range(len(attention_weight)) if attention_weight[i] == mx]
+    if len(mx_ind) == 1:
+        focused_crit = mx
+    else:
+        focused_crit = randrange(len(mx_ind))
+    return focused_crit
 
 
+def simulate(card_order: [], crit_order: [], pile_order: []):
+    """
+    :param card_order: The order of the deck in current trial
+    :param crit_order: The order of expected criteria by the experiment in current trial
+    :param pile_order: The order of Piles on the table in current trial
+    :return: None
+    """
+    attention_weight = [0.25, 0.25, 0.25, 0.25]
+    m = np.array([])
+    s = np.array([])
+    signal = [0, 0, 0, 0]
+    feedback = [0, 0, 0, 0]
 
+    Experiment.start(crit_order, pile_order)
+
+    for t, card_num in enumerate(card_order):
+        card = Experiment.deal_card(card_num)
+        if not card:
+            print("Out of cards! Job Finished.")
+            break
+        focused_crit = crit_focus(attention_weight)
+        k = Subject.pick_suitable_pile(card, focused_crit)  # Selected Pile Based on Criterion in focus
+        m[t][k] = np.array([0, 0, 0, 0])
+        response = Experiment.check_criteria(card, k)
+        if response:
+            m[t][k][focused_crit] = 1
+            s[t] = m[t][k]  # Unambiguous
+        else:
+            s[t] = [1, 1, 1, 1] - m[t][k]
 
 
 

@@ -135,7 +135,7 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
                     crit_confusion = True
                     strike = 0
             else:
-                # Case: last picked criteria was False on first run --> Pick a new one and move on:
+                # Case: last picked criteria was False --> Pick a new one and move on:
                 if i == 0:
                     crit_focus = Subject.pick_criteria()
                 else:
@@ -155,4 +155,4 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
         exp_results.append(record)
         i += 1
         # print(" SUBJECT:" + str(record) + "\n [CurStreak:" + str(strike) + "]\n")
-    print("Total Streaks = " + str(streaks) +" \n" )
+    print("Total Streaks = " + str(streaks) + " \n")
