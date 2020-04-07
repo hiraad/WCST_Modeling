@@ -32,7 +32,7 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
     """
     Simulates the outperform model
     :param card_order: The order of the deck in current trial
-    :param crit_order: The order of expected criterions by the experiment in current trial
+    :param crit_order: The order of expected criteria by the experiment in current trial
     :param pile_order: The order of Piles on the table in current trial
     :return: None
     """

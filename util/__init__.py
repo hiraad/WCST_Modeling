@@ -191,7 +191,6 @@ class Statistics:
         switch_std = [np.std(tries, ddof=1) for key, tries in switch_stat.items()]
         return start_means, start_std, switch_means, switch_std
 
-
     @staticmethod
     def results():
         """
