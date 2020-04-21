@@ -31,7 +31,7 @@ class Experiment:
     def start(crit_order=[], pile_order=[]):
         """
         Sets-up the Experiment by setting up the criterion order, pile order...
-        :param crit_order: By default goes through the list of criterions respectively (ie. Color, Fill, Topology,
+        :param crit_order: By default goes through the list of criterion respectively (ie. Color, Fill, Topology,
         Position) repeating the first one (Color) in the end. Pass a list to change order (eg. [3,2,1,0,3])
         :param pile_order: Defaults to the piles in order (ie. [1111],[2222],[3333]) pass a list to change order
         (eg. [3,2,1])
@@ -45,8 +45,11 @@ class Experiment:
         curCrit = 6
         if crit_order:
             criteriaList = crit_order
+            print("Criteria Order:" + str(criteriaList))
+            print("Current Criterion: " + str(criteriaList[0]))
         if pile_order:
             pileCodes = [pileCodes[i-1] for i in pile_order]
+            print("Pile Order: " + str(pileCodes))
 
     @staticmethod
     def deal_card(n: int):
@@ -57,26 +60,36 @@ class Experiment:
         """
         global curCard
         try:
-            curCard = cardStack[n]
+            curCard = cardStack[n-1]
             return curCard
         except:
             print("No More CARDS, Task is done!!")
+            return None
 
     @staticmethod
-    def check_criteria(cur_card: [], selected_pile: []):
+    def check_criteria(cur_card: [], selected_pile: [], c: int):
         """
         Checks if the Criterion matches given a card and the selected pile
         :param cur_card: Card at hand
         :param selected_pile: The chosen pile by the subject
+        :param c : The current criterion in focus
         :return: True/False
         """
         global crit
         global curCrit
+        # amb = []
         curCrit = criteriaList[crit]
+        # print("PILE: " + str(selected_pile) + "\nCARD: " + str(cur_card))
+        m_ind = [i for i, dim in enumerate(cur_card) if cur_card[i] == selected_pile[i]]
         if selected_pile[curCrit] == cur_card[curCrit]:
-            return True
+            response = True
+            ambiguity = True if len(m_ind) > 1 else False
         else:
-            return False
+            response = False
+            ambiguity = True if len(m_ind) < 3 else False
+        # print("AMBIGUOUS IN: " + str(amb))
+        # ambiguity = True if len(amb) > 1 else False
+        return response, ambiguity, m_ind
 
     @staticmethod
     def change_criteria():

@@ -1,5 +1,5 @@
 import json
-from models import outperform
+from models import outperform, bishara
 from util import Statistics, Experiment
 
 with open('data/conditions.txt', "r") as file:
@@ -9,9 +9,9 @@ pile_order = conditions_json[1]["Target_Order"]
 deck_order = conditions_json[2]["Card_Order"]
 
 
-for i in range(len(pile_order)):
+for i in range(1):
     print("SUBJECT: " + str(i + 1))
-    outperform.simulate(deck_order[i], criterion_order[i], pile_order[i])
+    bishara.simulate(deck_order[i], criterion_order[i], pile_order[i])
 
 
-Statistics.results()
+# Statistics.results()
