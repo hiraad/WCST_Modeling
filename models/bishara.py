@@ -1,5 +1,5 @@
 from util import Experiment, Subject, Statistics
-from random import randrange
+from random import randrange, choice
 import numpy as np
 """
 CardsKeys:
@@ -70,13 +70,13 @@ def rec(card, criteria, pile, match):
 def crit_focus(attention_weight: []):
     mx = max(attention_weight)
     mx_ind = [i for i, w in enumerate(attention_weight) if attention_weight[i] == mx]
-    # print("ATTENTION WEIGHT: " + str(attention_weight))
-    # print("MX_IND: " + str(mx_ind))
     if len(mx_ind) == 1:
-        focused_crit = mx
+        focused_crit = mx_ind[0]
+        print("IT ALL COMES TO THIS MX: " + str(focused_crit))
     else:
         print("I Have to select a criterion Randomly")
-        focused_crit = randrange(len(mx_ind))
+        print("MXIND: " + str(mx_ind))
+        focused_crit = choice(mx_ind)
     return int(focused_crit)
 
 
@@ -88,12 +88,11 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
     :return: None
     """
     a = np.array([0.25, 0.25, 0.25, 0.25])
-    m = np.zeros((len(card_order), 4), int)
-    s = np.zeros((len(card_order), 4), int)
+    m = np.zeros((len(card_order), 4), float)
+    s = np.zeros((len(card_order), 4), float)
     streak = 0
     t_streaks = 0  # Total number of achieved streaks
     crit = 0
-    response = False
     """
        ### MODEL PARAMETERS:
     """
@@ -101,10 +100,9 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
     p = 1
     d = 1
     f = 1
-
     Experiment.start(crit_order, pile_order)
-
     for t, card_num in enumerate(card_order):
+        p_a = a
         print("\nTrial: " + str(t+1))
         card = Experiment.deal_card(card_num)
         print("CARD: " + str(card))
@@ -114,43 +112,46 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
         focused_crit = crit_focus(a)
         k, alt = Subject.pick_suitable_pile(card, focused_crit)  # Selected Pile Based on Criterion in focus
         print("Demanded Criterion: " + str(crit_order[crit]))
-        print("Criterion: " + str(focused_crit))
-        print("Pile: " + str(k))
-        p_response = response
+        print("Selected Criterion: " + str(focused_crit))
+        print("Selected Pile: " + str(k))
+        print("Current Attention Weight:" + str(np.round(p_a, 3)))
+
+        # booleans response and ambiguous are self-explanatory , m_ind is a list of all ambiguous dimension indices
         response, ambiguous, m_ind = Experiment.check_criteria(card, k, focused_crit)
+        m[t][:] = 0.000001
         for i in m_ind:
-            m[t][i] = 1
-        print("M[t]: " + str(m[t]))
+            m[t][i] = 1 # Just creating the M vector based on indices from check_criteria()
+        print("M[t]: " + str(np.round(m[t], 2)))
         print("Response: " + str(response) + "\nAmbiguity: " + str(ambiguous))
         if response:
-            if p_response:
-                streak += 1
-            else:
-                streak = 0
+            streak += 1
+            print("StreakCOUNT: " + str(streak))
             s[t] = m[t]  # Unambiguous
             if ambiguous:
-                m_sum = np.sum(m[t])
-                a_sum = np.sum(a)
+                m_sum = np.sum(m[t] * (a ** f))
                 for dim in range(4):
-                    s[t][dim] = m[t][dim] * (a[dim] ** f) / m_sum * (a_sum ** f)
+                    s[t][dim] = ((m[t][dim]) * (a[dim] ** f)) / m_sum
             a = ((1 - r) * a) + (r * s[t])
         else:
+            streak = 0
             if ambiguous:
-                m_sum = np.sum((1-m[t]))
-                a_sum = np.sum(a)
+                m_sum = np.sum((1-m[t])*(a ** f))
                 for dim in range(4):
-                    s[t][dim] = np.array((1 - m[t][dim]) * (a[dim] ** f) / m_sum * (a_sum ** f))
+                    s[t][dim] = ((1 - m[t][dim]) * (a[dim] ** f)) / m_sum
             else:
                 s[t] = np.array([1, 1, 1, 1] - m[t])  # Unambiguous
             a = ((1 - p) * a) + (p * s[t])
-        print("ATTENTION WEIGHT: " + str(a))
-        print("SIGNAL: " + str(s[t]))
+        print("SIGNAL: " + str(np.round(s[t], 3)))
+        print("NEW ATTENTION WEIGHT: " + str(np.round(a, 3)))
         if streak == 10:
             streak = 0
-            start = crit_order[0]
             cur = crit_order[crit]
             crit = Experiment.change_criteria()
-            post = crit_order[crit]
+            try:
+                post = crit_order[crit]
+            except IndexError:
+                print("All Criterion Sorted To, Task is Done!")
+                break
             if t_streaks == 0:
                 tries = t - 9
             else:
