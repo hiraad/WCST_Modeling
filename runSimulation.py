@@ -9,9 +9,10 @@ pile_order = conditions_json[1]["Target_Order"]
 deck_order = conditions_json[2]["Card_Order"]
 
 
-for i in range(1):
+for i in range(len(deck_order)):
     print("SUBJECT: " + str(i + 1))
+    # outperform.simulate(deck_order[i], criterion_order[i], pile_order[i])
     bishara.simulate(deck_order[i], criterion_order[i], pile_order[i])
 
-
-# Statistics.results()
+Statistics.results()
+print(len(deck_order))

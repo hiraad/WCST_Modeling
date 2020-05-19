@@ -145,18 +145,26 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
         print("NEW ATTENTION WEIGHT: " + str(np.round(a, 3)))
         if streak == 10:
             streak = 0
-            cur = crit_order[crit]
+            prior = crit_order[crit]
             crit = Experiment.change_criteria()
-            try:
-                post = crit_order[crit]
-            except IndexError:
-                print("All Criterion Sorted To, Task is Done!")
-                break
-            if t_streaks == 0:
-                tries = t - 9
+            if not t_streaks:
+                post = -1
+                tries = t - 10
+                start = prior
+            elif t_streaks == 1:
+                post = prior
+                prior = start
+                tries = (t - 10) - prior_streak
             else:
-                tries = t - tries
-            Statistics.record(tries, cur, post)
+                prior = post
+                post = crit_order[crit-1]
+                tries = (t - 10) - prior_streak
+            if crit == len(crit_order):
+                print("ALL CRITERIA SORTED, TASK IS DONE!")
+                break  # break if all the criteria to check have been sorted to
+            prior_streak = t
+            # tries = t - tries
+            Statistics.record(tries, prior, post)
             t_streaks += 1
             print("STREAAAAAAK!" + str(t_streaks))
     print("Total STREAKS ACHIEVED: " + str(t_streaks))

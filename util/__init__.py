@@ -185,14 +185,14 @@ class Statistics:
         global start_trials
         global switch_stat
         global switch_trials
-        if post != -1:
-            key = str(prior) + "_" + str(post)
-            switch_trials[prior][post] += 1
-            switch_stat[key].append(tries)
-        else:
+        if post == -1:
             key = str(prior)
             start_trials[prior][0] += 1
             start_stat[key].append(tries)
+        else:
+            key = str(prior) + "_" + str(post)
+            switch_trials[prior][post] += 1
+            switch_stat[key].append(tries)
 
     @staticmethod
     def record_means():
