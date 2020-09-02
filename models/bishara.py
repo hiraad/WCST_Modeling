@@ -1,6 +1,9 @@
-from util import Experiment, Subject, Statistics
+from util import Subject, create_path
 from random import randrange, choice
 import numpy as np
+import pandas as pd
+import os
+
 """
 CardsKeys:
 
@@ -48,84 +51,133 @@ Implement:
         where h ranges between "1" to "4" for summation across all dimensions forcing feedback signal to add up to 1.
     
 """
-record: {}
+df_path = os.path.join('data', 'output', 'bishara')
 
 
-def rec(card, criteria, pile, match):
-    """
-    Records the Subjects card and choices in each step of the experiment (Not to be confused with record in statistics)
-    :param card: Card in hand
-    :param criteria: Criterion chosen in this step
-    :param pile: Pile that the subject lands the card
-    :param match: Response from the experiment (Match, No-Match)
-    :return: None
-    """
-    global record
-    record["Card"] = card
-    record["Criterion"] = criteria
-    record["Pile"] = pile
-    record["Match"] = match
-
-
-def crit_focus(attention_weight: []):
+def select_criterion(attention_weight: []):
     mx = max(attention_weight)
-    mx_ind = [i for i, w in enumerate(attention_weight) if attention_weight[i] == mx]
-    if len(mx_ind) == 1:
-        focused_crit = mx_ind[0]
-        print("IT ALL COMES TO THIS MX: " + str(focused_crit))
+    max_ind = [i for i, w in enumerate(attention_weight) if attention_weight[i] == mx]
+    if len(max_ind) == 1:
+        focused_crit = max_ind[0]
     else:
-        print("I Have to select a criterion Randomly")
-        print("MXIND: " + str(mx_ind))
-        focused_crit = choice(mx_ind)
+        focused_crit = choice(max_ind)
     return int(focused_crit)
 
 
-def simulate(card_order: [], crit_order: [], pile_order: []):
-    """
-    :param card_order: The order of the deck in current trial
-    :param crit_order: The order of expected criteria by the experiment in current trial
-    :param pile_order: The order of Piles on the table in current trial
-    :return: None
-    """
+def simulate(exp, par: []):
+    # Model's three Vectors
     a = np.array([0.25, 0.25, 0.25, 0.25])
-    m = np.zeros((len(card_order), 4), float)
-    s = np.zeros((len(card_order), 4), float)
-    streak = 0
-    t_streaks = 0  # Total number of achieved streaks
-    crit = 0
-    """
-       ### MODEL PARAMETERS:
-    """
-    r = 1
-    p = 1
+    m = np.zeros((len(exp.card_order), 4), float)
+    s = np.zeros((len(exp.card_order), 4), float)
+
+    # MODEL'S PARAMETERS:
+    r = par[0]
+    p = par[1]
     d = 1
-    f = 1
-    Experiment.start(crit_order, pile_order)
+    f = par[2]
+
+    # Other Variables
+    streak = 0
+    total_streaks = 0
+    rows = []
+
+    print(f"Demanded Criterion is: {exp.demanded_criterion}")
+
+    for t in range(0, len(exp.card_order)):
+        card_dimensions = exp.deal_card()
+        selected_criterion = select_criterion(a)
+        k, _ = Subject.select_pile(card_dimensions, selected_criterion)
+        response, ambiguous, m_ind = exp.check_criterion(card_dimensions, k, selected_criterion)
+
+        # Creating the current trial's Matching (m) vector
+        m[t][:] = 0.000001
+        for i in m_ind:
+            m[t][i] = 1
+
+        # Bishara Model:
+        if response:
+            streak += 1
+            if ambiguous:
+                m_sum = np.sum(m[t] * (a ** f))
+                for dim in range(4):
+                    s[t][dim] = ((m[t][dim]) * (a[dim] ** f)) / m_sum
+            else:
+                s[t] = m[t]
+            a = ((1 - r) * a) + (r * s[t])
+        else:
+            streak = 0
+            if ambiguous:
+                m_sum = np.sum((1-m[t])*(a ** f))
+                for dim in range(4):
+                    s[t][dim] = ((1 - m[t][dim]) * (a[dim] ** f)) / m_sum
+            else:
+                s[t] = np.array([1, 1, 1, 1] - m[t])  # Unambiguous
+            a = ((1 - p) * a) + (p * s[t])
+        # print(f"Trial: {exp.trial}, Current Card: {response}")
+        row = [exp.trial, card_dimensions, exp.demanded_criterion, selected_criterion, response,
+               a, m[t]]
+        if streak == 10:
+            streak = 0
+            total_streaks += 1
+            row.append(total_streaks)
+            demanded_criterion = exp.change_criterion()
+            if demanded_criterion is None:
+                print("All dimensions have been sorted to, The task is Done.")
+                rows.append(row)
+                break
+            print(f"Criterion Changed to: {exp.demanded_criterion}")
+        rows.append(row)
+    results_df = pd.DataFrame(rows, columns=['trial', 'card', 'demanded_criterion', 'selected_criterion', 'feedback',
+                                             'attention_weight', 'matching_vector', 'total_streaks'])
+    create_path(df_path)
+    results_df.to_csv(os.path.join(df_path, f'{exp.id}.csv'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    """
+    
     for t, card_num in enumerate(card_order):
         p_a = a
-        print("\nTrial: " + str(t+1))
+        # print("\nTrial: " + str(t+1))
         card = Experiment.deal_card(card_num)
-        print("CARD: " + str(card))
+        # print("CARD: " + str(card))
         if not card:
             print("Out of cards! Job Finished.")
             break
         focused_crit = crit_focus(a)
         k, alt = Subject.pick_suitable_pile(card, focused_crit)  # Selected Pile Based on Criterion in focus
-        print("Demanded Criterion: " + str(crit_order[crit]))
-        print("Selected Criterion: " + str(focused_crit))
-        print("Selected Pile: " + str(k))
-        print("Current Attention Weight:" + str(np.round(p_a, 3)))
+        # print("Demanded Criterion: " + str(crit_order[crit]))
+        # print("Selected Criterion: " + str(focused_crit))
+        # print("Selected Pile: " + str(k))
+        # print("Current Attention Weight:" + str(np.round(p_a, 3)))
 
         # booleans response and ambiguous are self-explanatory , m_ind is a list of all ambiguous dimension indices
         response, ambiguous, m_ind = Experiment.check_criteria(card, k, focused_crit)
         m[t][:] = 0.000001
         for i in m_ind:
             m[t][i] = 1 # Just creating the M vector based on indices from check_criteria()
-        print("M[t]: " + str(np.round(m[t], 2)))
-        print("Response: " + str(response) + "\nAmbiguity: " + str(ambiguous))
+        # print("M[t]: " + str(np.round(m[t], 2)))
+        # print("Response: " + str(response) + "\nAmbiguity: " + str(ambiguous))
         if response:
             streak += 1
-            print("StreakCOUNT: " + str(streak))
+            # print("StreakCOUNT: " + str(streak))
             s[t] = m[t]  # Unambiguous
             if ambiguous:
                 m_sum = np.sum(m[t] * (a ** f))
@@ -141,34 +193,34 @@ def simulate(card_order: [], crit_order: [], pile_order: []):
             else:
                 s[t] = np.array([1, 1, 1, 1] - m[t])  # Unambiguous
             a = ((1 - p) * a) + (p * s[t])
-        print("SIGNAL: " + str(np.round(s[t], 3)))
-        print("NEW ATTENTION WEIGHT: " + str(np.round(a, 3)))
+        # print("SIGNAL: " + str(np.round(s[t], 3)))
+        # print("NEW ATTENTION WEIGHT: " + str(np.round(a, 3)))
         if streak == 10:
             streak = 0
-            prior = crit_order[crit]
+            current = crit_order[crit]
             crit = Experiment.change_criteria()
-            if not t_streaks:
+            if t_streaks == 0:
                 post = -1
                 tries = t - 10
-                start = prior
+                start = current
             elif t_streaks == 1:
-                post = prior
-                prior = start
+                post = current
+                current = start
                 tries = (t - 10) - prior_streak
             else:
-                prior = post
+                current = post
                 post = crit_order[crit-1]
                 tries = (t - 10) - prior_streak
             if crit == len(crit_order):
-                print("ALL CRITERIA SORTED, TASK IS DONE!")
+                # print("ALL CRITERIA SORTED, TASK IS DONE!")
                 break  # break if all the criteria to check have been sorted to
             prior_streak = t
             # tries = t - tries
-            Statistics.record(tries, prior, post)
+            Statistics.record(tries, current, post)
             t_streaks += 1
-            print("STREAAAAAAK!" + str(t_streaks))
-    print("Total STREAKS ACHIEVED: " + str(t_streaks))
+            # print("STREAAAAAAK!" + str(t_streaks))
+    # print("Total STREAKS ACHIEVED: " + str(t_streaks))
 
-
+    """
 
 

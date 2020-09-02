@@ -3,7 +3,7 @@
         As the name suggests it is used to outperform the experiment without any cheating ofcourse. Just going through
         the whole thing in a very efficient way and without any mistakes.
 """
-from util import Experiment, Subject, Statistics
+from util import Experiment, Subject
 
 
 record: {}

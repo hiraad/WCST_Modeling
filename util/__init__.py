@@ -1,112 +1,93 @@
-"""
-This package contains 3 classes that provide methods for simulating the experiment. and calculating the stats of
-each trial.
-"""
-
 import numpy as np
 import random
+import json
+import os
+# from models import bishara
 
-cardCodesTxt = open('data/cards_codes.txt', "r")
-cardStack = [[int(i) for i in line.strip().split(',')] for line in cardCodesTxt]
-pileCodes = [[1, 1, 1, 1], [2, 2, 2, 2], [3, 3, 3, 3]]
-criteriaList = [0, 1, 2, 3, 0]
+
+# Experiment setup data from the original study:
+with open('data/input/conditions.txt', "r") as file:
+    conditions_json = json.load(file)
+base_criteria = conditions_json[0]["Criterion_Order"]
+base_piles = conditions_json[1]["Target_Order"]
+base_decks = conditions_json[2]["Card_Order"]
+
+card_codes_text = open('data/input/cards_codes.txt', "r")
+card_codes = [[int(i) for i in line.strip().split(',')] for line in card_codes_text]
+pile_codes = [[1, 1, 1, 1], [2, 2, 2, 2], [3, 3, 3, 3]]
+criteria_list = [0, 1, 2, 3, 0]
 crit = 0
 curCrit = 6
 
-global curCard
-start_trials = np.zeros((4, 1))
-start_stat = {"0": [], "1": [], "2": [], "3": []}
-switch_trials = np.zeros((4, 4))
-switch_stat = {"0_1": [], "0_3": [], "1_0": [], "1_2": [], "2_1": [], "2_3": [], "3_0": [], "3_2": []}
-start_means = []
-start_std = []
+
+def create_path(p):
+    if not os.path.exists(p):
+        os.makedirs(p)
+
+
+def run_experiment(subject):
+    card_order = base_decks[subject-1]
+    criterion_order = base_criteria[subject-1]
+    pile_order = base_piles[subject-1]
+    exp = Experiment(subject, card_order, criterion_order, pile_order)
+    return exp
+    # if model.lower() == 'bishara':
+    #     print(f'Running {model} with parameters {parameters}.')
+
+
+def run_for_all(model, parameters):
+    for subject, card_order in enumerate(card_order):
+        criterion_order = base_criteria[subject]
+        pile_order = base_piles[subject]
+        exp = Experiment(subject+1,card_order, criterion_order, pile_order)
+        if model.lower() == 'bishara':
+            print(f'Running {model} with parameters {parameters}.')
 
 
 class Experiment:
-    """
-    Provides functions to simulate the experiment
-    Methods:  1. deal_card 2. check_criteria 3.change criteria
-    """
-    @staticmethod
-    def start(crit_order=[], pile_order=[]):
-        """
-        Sets-up the Experiment by setting up the criterion order, pile order...
-        :param crit_order: By default goes through the list of criterion respectively (ie. Color, Fill, Topology,
-        Position) repeating the first one (Color) in the end. Pass a list to change order (eg. [3,2,1,0,3])
-        :param pile_order: Defaults to the piles in order (ie. [1111],[2222],[3333]) pass a list to change order
-        (eg. [3,2,1])
-        :return: None
-        """
-        global crit
-        global curCrit
-        global criteriaList
-        global pileCodes
-        crit = 0
-        curCrit = 6
-        if crit_order:
-            criteriaList = crit_order
-            print("Criteria Order:" + str(criteriaList))
-            print("Current Criterion: " + str(criteriaList[0]))
-        if pile_order:
-            pileCodes = [pileCodes[i-1] for i in pile_order]
-            print("Pile Order: " + str(pileCodes))
+    criterion_index = 0
 
-    @staticmethod
-    def deal_card(n: int):
+    def __init__(self, subject, card_order, criterion_order, pile_order):
+        self.id = subject
+        self.card_order = card_order
+        self.criterion_order = criterion_order
+        self.pile_order = pile_order
+        self.trial = 0
+        self.current_card = None
+        self.demanded_criterion = criterion_order[Experiment.criterion_index]
+
+    def deal_card(self):
         """
         Deals a card given a number revealing the information on card (ie. color, fill, topology, position respectively)
         :param n: Card number (see cards_codes.txt in root/data)
         :return: The information on card
         """
-        global curCard
+        self.trial += 1
         try:
-            curCard = cardStack[n-1]
-            return curCard
+            self.current_card = self.card_order[self.trial - 1]
+            card_dimensions = card_codes[self.current_card]
+            return card_dimensions
         except:
             print("No More CARDS, Task is done!!")
             return None
 
-    @staticmethod
-    def check_criteria(cur_card: [], selected_pile: [], c: int):
-        """
-        Checks if the Criterion matches given a card and the selected pile
-        :param cur_card: Card at hand
-        :param selected_pile: The chosen pile by the subject
-        :param c : The current criterion in focus
-        :return: True/False
-        """
-        global crit
-        global curCrit
-        # amb = []
-        curCrit = criteriaList[crit]
-        # print("PILE: " + str(selected_pile) + "\nCARD: " + str(cur_card))
+    def check_criterion(self, cur_card: [], selected_pile: [], c: int):
         m_ind = [i for i, dim in enumerate(cur_card) if cur_card[i] == selected_pile[i]]
-        if selected_pile[curCrit] == cur_card[curCrit]:
+        if selected_pile[self.demanded_criterion] == cur_card[self.demanded_criterion]:
             response = True
             ambiguity = True if len(m_ind) > 1 else False
         else:
             response = False
             ambiguity = True if len(m_ind) < 3 else False
-        # print("AMBIGUOUS IN: " + str(amb))
-        # ambiguity = True if len(amb) > 1 else False
         return response, ambiguity, m_ind
 
-    @staticmethod
-    def change_criteria():
-        """
-        Goes to the next criterion. NOTE: The returned value is not the CRITERION itself but simply an index to be used
-        to return the real criterion from the criterionList
-        :return: The new criterion (:int)
-        """
-        global crit
-        global criteriaList
-        if crit < len(criteriaList)-1:
-            crit += 1
-            # print("Criterion changed To: " + str(criteriaList[crit]))
-            return crit
+    def change_criterion(self):
+        if Experiment.criterion_index < len(criteria_list)-1:
+            Experiment.criterion_index += 1
+            self.demanded_criterion = self.criterion_order[Experiment.criterion_index]
+            return self.demanded_criterion
         else:
-            crit += 1
-            return crit
+            return None
 
 
 criterions = [0, 1, 2, 3]
@@ -142,7 +123,7 @@ class Subject:
         return criteria_focus
 
     @staticmethod
-    def pick_suitable_pile(cur_card: [], criteria_focus: int):
+    def select_pile(cur_card: [], criteria_focus: int):
         """
         Searches for a suitable pile based on the card in hand and the chosen criterion. NOTE: multiple returns
         1. the selected pile as a list (of card codes eg. [1111]) 2. The possible criterion mismatch (ie. if the
@@ -152,7 +133,7 @@ class Subject:
         :param criteria_focus: Selected Criterion
         :return: SelectedPile and Possible Alternative Criterion
         """
-        for pile in pileCodes:
+        for pile in pile_codes:
             if cur_card[criteria_focus] == pile[criteria_focus]:
                 selected_pile = pile
                 break
@@ -163,60 +144,8 @@ class Subject:
         return selected_pile, possible_crit
 
 
-class Statistics:
-    """
-    Provides functions to calculate the statistics of each trial
-    """
 
-    @staticmethod
-    def record(tries: int, prior: int, post: int = -1):
-        """
-        Records the results (ie. Number of times a criterion is asked for and the Number of tries until a criterion is
-        found) in A matrix where each row and column corresponds to every criterion respectively (Color, Fill, Topology,
-        Position) for two different categories:
-        1. Starting with a criterion recorded in a (4x1) Matrix
-        2. Switch from criterion to another recorded in a (4x4) Matrix
-        :param tries: Number of tries until the criterion was found
-        :param prior: The Criterion that was asked for
-        :param post: The Next Criterion
-        :return: None
-        """
-        global start_stat
-        global start_trials
-        global switch_stat
-        global switch_trials
-        if post == -1:
-            key = str(prior)
-            start_trials[prior][0] += 1
-            start_stat[key].append(tries)
-        else:
-            key = str(prior) + "_" + str(post)
-            switch_trials[prior][post] += 1
-            switch_stat[key].append(tries)
 
-    @staticmethod
-    def record_means():
-        global start_means
-        global start_std
-        start_means = [np.mean(tries) for key, tries in start_stat.items()]
-        start_std = [np.std(tries, ddof=1) for key, tries in start_stat.items()]
-        switch_means = [np.mean(tries) for key, tries in switch_stat.items()]
-        switch_std = [np.std(tries, ddof=1) for key, tries in switch_stat.items()]
-        return start_means, start_std, switch_means, switch_std
-
-    @staticmethod
-    def results():
-        """
-        Prints out the results of the statistics
-        :return: None
-        """
-        stMean, stStd, swMean, swStd  = Statistics.record_means()
-        print("Start Trials: \n" + str(start_trials))
-        print("Start Means: " + str(stMean))
-        print("Start Deviations:\n" + str(stStd))
-        print("\nSwitch Trials: \n" + str(switch_trials))
-        print("Switch Mean: "+ str(swMean))
-        print("Switch Deviations:\n" + str(swStd))
 
 
 
