@@ -2,15 +2,12 @@ import numpy as np
 import random
 import json
 import os
+import pickle
 # from models import bishara
 
 
-# Experiment setup data from the original study:
 with open('data/input/conditions.txt', "r") as file:
     conditions_json = json.load(file)
-base_criteria = conditions_json[0]["Criterion_Order"]
-base_piles = conditions_json[1]["Target_Order"]
-base_decks = conditions_json[2]["Card_Order"]
 
 card_codes_text = open('data/input/cards_codes.txt', "r")
 card_codes = [[int(i) for i in line.strip().split(',')] for line in card_codes_text]
@@ -25,27 +22,12 @@ def create_path(p):
         os.makedirs(p)
 
 
-def run_experiment(subject):
-    card_order = base_decks[subject-1]
-    criterion_order = base_criteria[subject-1]
-    pile_order = base_piles[subject-1]
-    exp = Experiment(subject, card_order, criterion_order, pile_order)
-    return exp
-    # if model.lower() == 'bishara':
-    #     print(f'Running {model} with parameters {parameters}.')
-
-
-def run_for_all(model, parameters):
-    for subject, card_order in enumerate(card_order):
-        criterion_order = base_criteria[subject]
-        pile_order = base_piles[subject]
-        exp = Experiment(subject+1,card_order, criterion_order, pile_order)
-        if model.lower() == 'bishara':
-            print(f'Running {model} with parameters {parameters}.')
-
-
 class Experiment:
-    criterion_index = 0
+
+    # Experiment setup data from the original study:
+    base_criteria = conditions_json[0]["Criterion_Order"]
+    base_piles = conditions_json[1]["Target_Order"]
+    base_decks = conditions_json[2]["Card_Order"]
 
     def __init__(self, subject, card_order, criterion_order, pile_order):
         self.id = subject
@@ -54,7 +36,8 @@ class Experiment:
         self.pile_order = pile_order
         self.trial = 0
         self.current_card = None
-        self.demanded_criterion = criterion_order[Experiment.criterion_index]
+        self.criterion_index = 0
+        self.demanded_criterion = criterion_order[self.criterion_index]
 
     def deal_card(self):
         """
@@ -82,12 +65,38 @@ class Experiment:
         return response, ambiguity, m_ind
 
     def change_criterion(self):
-        if Experiment.criterion_index < len(criteria_list)-1:
-            Experiment.criterion_index += 1
-            self.demanded_criterion = self.criterion_order[Experiment.criterion_index]
+        if self.criterion_index < len(criteria_list)-1:
+            self.criterion_index += 1
+            self.demanded_criterion = self.criterion_order[self.criterion_index]
             return self.demanded_criterion
         else:
             return None
+
+    @staticmethod
+    def reset_experiment():
+        df_path = os.path.join('data', 'output', 'bishara')
+        for df in os.listdir(df_path):
+            os.remove(os.path.join(df_path, df))
+
+    @staticmethod
+    def setup_experiment(subject):
+        card_order = Experiment.base_decks[subject - 1]
+        criterion_order = Experiment.base_criteria[subject - 1]
+        pile_order = Experiment.base_piles[subject - 1]
+        experiment_path = os.path.join('data', 'experiment_instances')
+        instance = os.path.join(experiment_path, f'{subject}.pickle')
+        if os.path.exists(instance):
+            with open(instance, 'rb') as pickle_file:
+                exp = pickle.load(pickle_file)
+                print("--------------------------")
+                print(f"\nSubject {exp.id}, loaded.")
+        else:
+            exp = Experiment(subject, card_order, criterion_order, pile_order)
+            print("--------------------------")
+            print(f"\nSubject {exp.id}, Initialized.")
+            with open(os.path.join(experiment_path, f'{subject}.pickle'), 'wb') as pickle_dump:
+                pickle.dump(exp, pickle_dump)
+        return exp
 
 
 criterions = [0, 1, 2, 3]
@@ -142,18 +151,3 @@ class Subject:
         possible_crit = possible_crit.tolist()[0]
         possible_crit.remove(criteria_focus)
         return selected_pile, possible_crit
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

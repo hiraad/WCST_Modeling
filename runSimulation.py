@@ -1,17 +1,32 @@
-# import json
-from util import run_experiment
+from util.calc import Statistics
+from util import Experiment
 from models import bishara
-# import numpy as np
+import pandas as pd
+import os
 # from scipy.optimize import fmin, minimize, Bounds
 
-parameters = [0.5,0.5,0.5]
-exp = run_experiment(7)
-bishara.simulate(exp, parameters)
+model = 'bishara'
+parameters = [0.5, 0.5, 0.5]
+# Experiment.reset_experiment()
+
+# Run on all subjects
+
+# for n in range(1, len(Experiment.base_decks)):
+#     exp = Experiment.setup_experiment(n)
+#     result_df = bishara.simulate(exp, parameters)
 
 
+# Calculate the statistics
 
-
-
+results_path = os.path.join('data', 'output', 'bishara')
+for file in os.listdir(results_path):
+    print('-----------------------')
+    print(f'\nResults for {file}\n')
+    df = pd.read_csv(os.path.join(results_path, file))
+    Statistics.calculate(df)
+    stt, swt, stMean, stStd, swMean, swStd = Statistics.results()
+print(f"Number Of Start Trials:\n{stt}\n \nNumber of Switch Trials: \n{swt}\n \n::NUMBER OF TRIES:: \nStarts Mean: \n{stMean}\n"
+      f"\nStarts Standard Deviation:\n{stStd}\n \nSwitch Means: \n{swMean}\n \nSwitch Standard Deviations: \n{swStd}")
 
 
 
