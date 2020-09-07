@@ -1,9 +1,8 @@
 import numpy as np
 import random
+import pickle
 import json
 import os
-import pickle
-# from models import bishara
 
 
 with open('data/input/conditions.txt', "r") as file:
@@ -17,9 +16,15 @@ crit = 0
 curCrit = 6
 
 
+
 def create_path(p):
     if not os.path.exists(p):
         os.makedirs(p)
+
+
+def clear_directory(p):
+    for obj in os.listdir(p):
+        os.remove(os.path.join(p, obj))
 
 
 class Experiment:
@@ -29,26 +34,28 @@ class Experiment:
     base_piles = conditions_json[1]["Target_Order"]
     base_decks = conditions_json[2]["Card_Order"]
 
+    instances = {}
+    instance_path = os.path.join('data', 'experiment_instances')
+
     def __init__(self, subject, card_order, criterion_order, pile_order):
         self.id = subject
         self.card_order = card_order
         self.criterion_order = criterion_order
         self.pile_order = pile_order
         self.trial = 0
-        self.current_card = None
         self.criterion_index = 0
         self.demanded_criterion = criterion_order[self.criterion_index]
 
+    def reset_experiment(self):
+        self.trial = 0
+        self.criterion_index = 0
+        self.demanded_criterion = self.criterion_order[self.criterion_index]
+
     def deal_card(self):
-        """
-        Deals a card given a number revealing the information on card (ie. color, fill, topology, position respectively)
-        :param n: Card number (see cards_codes.txt in root/data)
-        :return: The information on card
-        """
         self.trial += 1
         try:
-            self.current_card = self.card_order[self.trial - 1]
-            card_dimensions = card_codes[self.current_card]
+            current_card = self.card_order[self.trial - 1]
+            card_dimensions = card_codes[current_card]
             return card_dimensions
         except:
             print("No More CARDS, Task is done!!")
@@ -73,30 +80,28 @@ class Experiment:
             return None
 
     @staticmethod
-    def reset_experiment():
-        df_path = os.path.join('data', 'output', 'bishara')
-        for df in os.listdir(df_path):
-            os.remove(os.path.join(df_path, df))
-
-    @staticmethod
-    def setup_experiment(subject):
-        card_order = Experiment.base_decks[subject - 1]
-        criterion_order = Experiment.base_criteria[subject - 1]
-        pile_order = Experiment.base_piles[subject - 1]
-        experiment_path = os.path.join('data', 'experiment_instances')
-        instance = os.path.join(experiment_path, f'{subject}.pickle')
+    def load_experiment(subject):
+        instance = os.path.join(Experiment.instance_path, f'{subject}.pickle')
         if os.path.exists(instance):
             with open(instance, 'rb') as pickle_file:
                 exp = pickle.load(pickle_file)
-                print("--------------------------")
-                print(f"\nSubject {exp.id}, loaded.")
         else:
-            exp = Experiment(subject, card_order, criterion_order, pile_order)
-            print("--------------------------")
-            print(f"\nSubject {exp.id}, Initialized.")
-            with open(os.path.join(experiment_path, f'{subject}.pickle'), 'wb') as pickle_dump:
-                pickle.dump(exp, pickle_dump)
+            print(f"No instance for class {subject} was found! Make sure you have setup experiments for all "
+                  f"subjects at least once.")
         return exp
+
+    @staticmethod
+    def setup_experiment(save=False):
+        for subject in range(1, len(Experiment.base_decks)):
+            card_order = Experiment.base_decks[subject - 1]
+            criterion_order = Experiment.base_criteria[subject - 1]
+            pile_order = Experiment.base_piles[subject - 1]
+            exp = Experiment(subject, card_order, criterion_order, pile_order)
+            Experiment.instances[f'{subject}'] = exp
+            if save:
+                with open(os.path.join(Experiment.instance_path, f'{subject}.pickle'), 'wb') as pickle_dump:
+                    pickle.dump(exp, pickle_dump)
+        return Experiment.instances
 
 
 criterions = [0, 1, 2, 3]

@@ -51,7 +51,6 @@ Implement:
         where h ranges between "1" to "4" for summation across all dimensions forcing feedback signal to add up to 1.
     
 """
-df_path = os.path.join('data', 'output', 'bishara')
 
 
 def select_criterion(attention_weight: []):
@@ -64,7 +63,7 @@ def select_criterion(attention_weight: []):
     return int(focused_crit)
 
 
-def simulate(exp, par: []):
+def simulate(exp, par: [], save=False):
     # Model's three Vectors
     a = np.array([0.25, 0.25, 0.25, 0.25])
     m = np.zeros((len(exp.card_order), 4), float)
@@ -84,6 +83,9 @@ def simulate(exp, par: []):
     for t in range(0, len(exp.card_order)):
 
         card_dimensions = exp.deal_card()
+        if card_dimensions is None:
+            print(f"Total Streaks: {total_streaks}")
+            break
         selected_criterion = select_criterion(a)
         k, _ = Subject.select_pile(card_dimensions, selected_criterion)
         response, ambiguous, m_ind = exp.check_criterion(card_dimensions, k, selected_criterion)
@@ -112,7 +114,6 @@ def simulate(exp, par: []):
             else:
                 s[t] = np.array([1, 1, 1, 1] - m[t])  # Unambiguous
             a = ((1 - p) * a) + (p * s[t])
-        # print(f"Trial: {exp.trial}, Current Card: {response}")
         row = [exp.trial, card_dimensions, exp.demanded_criterion, selected_criterion, response]
         if streak == 10:
             streak = 0
@@ -120,13 +121,17 @@ def simulate(exp, par: []):
             row.append(total_streaks)
             demanded_criterion = exp.change_criterion()
             if demanded_criterion is None:
-                print("All dimensions have been sorted to, The task is Done.")
+                # print("All dimensions have been sorted to, The task is Done.")
                 rows.append(row)
                 break
         rows.append(row)
+
     results_df = pd.DataFrame(rows, columns=['trial', 'card', 'demanded_criterion', 'selected_criterion', 'feedback',
                                              'total_streaks'])
-    create_path(df_path)
-    results_df.to_csv(os.path.join(df_path, f'{exp.id}.csv'), index=False)
-    print(f"Results for {exp.id}.csv successfully saved.\n")
+    if save:
+        df_path = os.path.join('data', 'output', 'bishara')
+        create_path(df_path)
+        results_df.to_csv(os.path.join(df_path, f'{exp.id}.csv'), index=False)
+        print(f"Results for {exp.id}.csv successfully saved.\n")
+    exp.reset_experiment()
     return results_df
