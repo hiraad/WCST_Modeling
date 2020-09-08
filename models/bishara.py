@@ -5,7 +5,7 @@ import pandas as pd
 import os
 
 """
-CardsKeys:
+Dimensions and CardsKeys and their assigned numeric values:
 
     0) Color	1) Fill	    2) Topology		    3) Position    
     1: Blue		1: Empty	1: Contain  		1: Top

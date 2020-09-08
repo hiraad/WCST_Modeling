@@ -16,7 +16,6 @@ crit = 0
 curCrit = 6
 
 
-
 def create_path(p):
     if not os.path.exists(p):
         os.makedirs(p)

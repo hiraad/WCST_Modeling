@@ -5,7 +5,16 @@ import pandas as pd
 import os
 
 model = 'bishara'
-parameters = [0.53, 0.50, 4.47]
+parameters = [0.90, 0.090, 2.5]
+
+'''
+Parameters that break:
+
+NANS:: 
+[0.90, 0.020, 2.17]
+
+'''
+
 results_path = os.path.join('data', 'output', 'bishara')
 
 '''
@@ -16,10 +25,10 @@ experiment_stages = Experiment.setup_experiment(save=False)
 '''
 1. Run The Model and Calculate the statistics
 '''
-# for subject, exp in Experiment.instances.items():
-#     df = bishara.simulate(exp, parameters)
-#     Statistics.record(df)
-# stt, swt, stMean, stStd, swMean, swStd = Statistics.calculate_results()
+for subject, exp in Experiment.instances.items():
+    df = bishara.simulate(exp, parameters)
+    Statistics.record(df)
+start_n, switch_n, start_mean, start_std, switch_mean, switch_std = Statistics.calculate_results()
 
 '''
 2. Do so from the exported dataframes
@@ -40,9 +49,16 @@ experiment_stages = Experiment.setup_experiment(save=False)
 '''
 4.  Find optimized hyperparameters
 '''
-Optimize.optuna(100, experiment_stages)
+# 4.1. Optuna
+# Optimize.optuna(1000, experiment_stages)
 
-
+# 4.2. fmin
+Optimize.minimze()
+'''
+5. RMSE the statistics results
+'''
+# rmse = Statistics.RMSE(switch_n, 'switch_n', True)
+# print(rmse)
 
 
 

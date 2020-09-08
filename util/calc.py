@@ -1,10 +1,7 @@
-from util import create_path, Experiment
-from scipy.optimize import fmin, minimize, Bounds
-import pandas as pd
+from scipy.optimize import minimize
 from models import bishara
 import numpy as np
 import optuna
-import os
 
 
 class Statistics:
@@ -38,28 +35,37 @@ class Statistics:
                     key = f"{prior_criterion}_{post_criterion}"
                     Statistics.switch_tries[key].append(tries)
 
+
     @staticmethod
     def calculate_results():
         start_means = [np.mean(tries) for key, tries in Statistics.start_tries.items()]
         start_std = [np.std(tries, ddof=1) for key, tries in Statistics.start_tries.items()]
         switch_means = [np.mean(tries) for key, tries in Statistics.switch_tries.items()]
         switch_std = [np.std(tries, ddof=1) for key, tries in Statistics.switch_tries.items()]
-        return Statistics.start_trials, Statistics.switch_trials, start_means, start_std, switch_means, switch_std
+        switch_trials = Statistics.switch_trials[Statistics.switch_trials != 0]
+        switch_trials = np.reshape(switch_trials, (1, -1))
+        start_trials = Statistics.start_trials
+        Statistics.start_trials = np.zeros(4)
+        Statistics.switch_trials = np.zeros((4, 4))
+        return start_trials, switch_trials, start_means, start_std, switch_means, switch_std
 
     @staticmethod
-    def RMSE(p, t):
+    def RMSE(p, t, print_result=False):
+        # Base Results:
+        base_results = {
+            'start_n': [12, 11, 12, 9],
+            'start_mean': [20.75, 12.91, 5.58, 27.33],
+            'start_std': [22.59, 9.87, 8.83, 30.49],
+            'switch_n': [16, 10, 14, 19, 13, 14, 14, 8],
+            'switch_mean': [11.13, 16, 15.29, 11.47, 11.69, 38.71, 6.86, 23.25],
+            'switch_std': [8.39, 13.13, 22.06, 13.38, 11.41, 28.18, 6.55, 26.44]
+        }
         prediction = np.array(p)
-        target = np.array(t)
+        target = np.array(base_results[t])
+        if print_result:
+            print(f"Model Results: \n{prediction} \nBase Results: \n{target}\n")
+
         return np.sqrt(np.mean((prediction - target) ** 2))
-
-
-# Base Results:
-base_start_n = [12, 11, 12, 9]
-base_start_mean_tries = [20.75, 12.91, 5.58, 27.33]
-base_start_std_tries = [22.59, 9.87, 8.83, 30.49]
-base_switch_n = [16, 10, 14, 19, 13, 14, 14, 8]
-base_switch_mean_tries = [11.13, 16, 15.29, 11.47, 11.69, 38.71, 6.86, 23.25]
-base_switch_std_tries = [8.39, 13.13, 22.06, 13.38, 11.41, 28.18, 6.55, 26.44]
 
 
 class Optimize:
@@ -72,7 +78,7 @@ class Optimize:
         bounds = (b, b, b2)
 
     @staticmethod
-    def objective(trial):
+    def optuna_objective(trial):
         r = trial.suggest_uniform('r', 0.1, 1)
         p = trial.suggest_uniform('p', 0.1, 1)
         f = trial.suggest_uniform('f', 0.1, 5)
@@ -81,57 +87,48 @@ class Optimize:
             df = bishara.simulate(exp, parameters)
             Statistics.record(df)
         start_n, switch_n, start_mean, start_dev, switch_mean, switch_dev = Statistics.calculate_results()
-        obj = Statistics.RMSE(switch_mean, base_switch_mean_tries)
+        # obj = Statistics.RMSE(switch_mean, 'switch_mean')
+        obj = Statistics.RMSE(switch_dev, 'switch_std')
+        # obj = Statistics.RMSE(switch_n, 'switch_n', True)
+
         return obj
 
     @staticmethod
     def optuna(n_trials, stages):
         Statistics.stages = stages
         study = optuna.create_study(study_name='bishara_opt')
-        study.optimize(Optimize.objective, n_trials=n_trials)
+        study.optimize(Optimize.optuna_objective, n_trials=n_trials)
         print(study)
         print(f'Best trial until now: {study.best_trial.number}')
         print(' Value: ', study.best_trial)
 
+    run = 0
 
+    @staticmethod
+    def scipy_objective(par):
+        Optimize.run
+        Optimize.run += 1
+        print(f"Run: {Optimize.run}")
+        print('Parameters: ' + str(par))
 
+        for subject, exp in Statistics.stages.items():
+            df = bishara.simulate(exp, parameters)
+            Statistics.record(df)
 
+        start_n, switch_n, start_mean, start_std, switch_mean, switch_std = Statistics.calculate_results()
 
+        # obj = Statistics.RMSE(switch_mean, 'switch_mean_tries', True)
+        obj = Statistics.RMSE(switch_std, 'switch_std', True)
+        # obj = Statistics.RMSE(switch_n, 'switch_n', True)
 
+        print('Objective: ' + str(obj))
+        print('*******')
+        return obj
 
-
-
-
-
-
-    # run = 0
-    # def run_bishara(par):
-    #     global run
-    #     run += 1
-    #     print('*******')
-    #     print(run)
-    #     print('Parameters: ' + str(par))
-    #
-    #     for i in range(len(deck_order)):
-    #         # print("SUBJECT: " + str(i + 1))
-    #         # outperform.simulate(deck_order[i], criterion_order[i], pile_order[i])
-    #         bishara.simulate(deck_order[i], criterion_order[i], pile_order[i], par)
-    #
-    #     stNum, swNum, stMean, stDev, swMean, swDev = Statistics.results()
-    #     # obj = np.absolute(stNum[3]-9)
-    #     obj = np.linalg.norm(sum(swMean)-sum(sw_mtries))
-    #     print(f'Start No. of Tries: {swMean}')
-    #     # print(stNum,swNum,stMean,stDev,swMean,swDev)
-    #     print('Objective: ' + str(obj))
-    #     print('*******')
-    #     return obj
-    #     # print(len(deck_order))
-    #
-    #
-    # rp_bnd = (0, 0.99)
-    # d_bnd = (0, 4.95)
-    # f_bnd = (0, 4.95)
-    # bnds = (rp_bnd,rp_bnd,f_bnd)
-    # # minimum = fmin(run_bishara, [0.5, 0.5, 0.5], xtol=0.0000000000001)
-    # minimum = minimize(run_bishara, [.5, .5, 2.5], method='SLSQP', bounds=bnds, tol=0.1)
-    # print(minimum)
+    @staticmethod
+    def minimze():
+        r_p_bnd = (0, 0.99)
+        f_bnd = (0, 4.95)
+        bnds = (r_p_bnd, r_p_bnd, f_bnd)
+        minimum = minimize(Optimize.scipy_objective, [.1, .1, .1], method='SLSQP', bounds=bnds)
+        print(minimum)
