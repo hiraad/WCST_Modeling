@@ -64,6 +64,7 @@ def select_criterion(attention_weight: []):
 
 
 def simulate(exp, par: [], save=False):
+    # print(exp.id)
     # Model's three Vectors
     a = np.array([0.25, 0.25, 0.25, 0.25])
     m = np.zeros((len(exp.card_order), 4), float)
@@ -97,6 +98,7 @@ def simulate(exp, par: [], save=False):
 
         # Bishara Model:
         if response:
+            # print("True")
             streak += 1
             if ambiguous:
                 m_sum = np.sum(m[t] * (a ** f))
@@ -106,6 +108,8 @@ def simulate(exp, par: [], save=False):
                 s[t] = m[t]
             a = ((1 - r) * a) + (r * s[t])
         else:
+            # print("False")
+
             streak = 0
             if ambiguous:
                 m_sum = np.sum((1-m[t])*(a ** f))
@@ -116,6 +120,7 @@ def simulate(exp, par: [], save=False):
             a = ((1 - p) * a) + (p * s[t])
         row = [exp.trial, card_dimensions, exp.demanded_criterion, selected_criterion, response]
         if streak == 10:
+            # print("STREAK ACHIEVED")
             streak = 0
             total_streaks += 1
             row.append(total_streaks)

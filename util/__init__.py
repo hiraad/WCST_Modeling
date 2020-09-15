@@ -1,3 +1,5 @@
+from time import sleep
+from tqdm import tqdm
 import numpy as np
 import random
 import pickle
@@ -91,15 +93,17 @@ class Experiment:
 
     @staticmethod
     def setup_experiment(save=False):
-        for subject in range(1, len(Experiment.base_decks)):
-            card_order = Experiment.base_decks[subject - 1]
-            criterion_order = Experiment.base_criteria[subject - 1]
-            pile_order = Experiment.base_piles[subject - 1]
-            exp = Experiment(subject, card_order, criterion_order, pile_order)
-            Experiment.instances[f'{subject}'] = exp
+        for subject in tqdm(range(0, len(Experiment.base_decks)), desc='Loading the Experiment: '):
+            sleep(.01)
+            card_order = Experiment.base_decks[subject]
+            criterion_order = Experiment.base_criteria[subject]
+            pile_order = Experiment.base_piles[subject]
+            exp = Experiment(subject+1, card_order, criterion_order, pile_order)
+            Experiment.instances[f'{subject+1}'] = exp
             if save:
-                with open(os.path.join(Experiment.instance_path, f'{subject}.pickle'), 'wb') as pickle_dump:
+                with open(os.path.join(Experiment.instance_path, f'{subject+1}.pickle'), 'wb') as pickle_dump:
                     pickle.dump(exp, pickle_dump)
+        print('\nExperiment Loaded Successfully.\n')
         return Experiment.instances
 
 
