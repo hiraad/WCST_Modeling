@@ -63,7 +63,7 @@ class Statistics:
         return self.start_trials, switch_trials, start_means, start_std, switch_means, switch_std
 
     @staticmethod
-    def RMSE(p, t, print_result=False):
+    def RMSE(p, t, verbose=False):
 
         # Base Results:
         base_results = {
@@ -76,7 +76,7 @@ class Statistics:
         }
         prediction = np.array(p)
         target = np.array(base_results[t])
-        if print_result:
+        if verbose:
             print(f"Model Results: \n{prediction} \nBase Results: \n{target}\n")
 
         return np.sqrt(np.mean((prediction - target) ** 2))
@@ -99,26 +99,28 @@ class Optimize:
         p = trial.suggest_uniform('p', 0.1, 1)
         f = trial.suggest_uniform('f', 0.1, 5)
         parameters = [r, p, f]
+        print(f"Parameters: {parameters}")
         stats = Statistics()
         for subject, exp in Optimize.experiment_instances.items():
             df = bishara.simulate(exp, parameters)
             stats.record(df)
         start_n, switch_n, start_mean, start_std, switch_mean, switch_std = stats.calculate_results()
 
-        # obj = Statistics.RMSE(switch_mean, 'switch_mean')
-        obj = Statistics.RMSE(switch_std, 'switch_std')
+        obj = Statistics.RMSE(switch_mean, 'switch_mean')
+        # obj = Statistics.RMSE(switch_std, 'switch_std')
         # obj = Statistics.RMSE(switch_n, 'switch_n', True)
 
         return obj
 
     @staticmethod
-    def optuna(n_trials, stages):
+    def optuna(n_trials, stages, verbose=False):
         Optimize.experiment_instances = stages
         study = optuna.create_study(study_name='bishara_opt')
-        study.optimize(Optimize.optuna_objective, n_trials=n_trials)
-        print(study)
-        print(f'Best trial until now: {study.best_trial.number}')
-        print(' Value: ', study.best_trial)
+        study.optimize(Optimize.optuna_objective, n_trials=n_trials,show_progress_bar=True)
+        if verbose:
+            print(study)
+            print(f'Best trial until now: {study.best_trial.number}')
+            print(' Value: ', study.best_trial)
 
     run = 0
 
@@ -134,8 +136,8 @@ class Optimize:
 
         start_n, switch_n, start_mean, start_std, switch_mean, switch_std = stats.calculate_results()
 
-        # obj = Statistics.RMSE(switch_mean, 'switch_mean_tries', True)
-        obj = Statistics.RMSE(switch_std, 'switch_std', True)
+        obj = Statistics.RMSE(switch_mean, 'switch_mean', True)
+        # obj = Statistics.RMSE(switch_std, 'switch_std', True)
         # obj = Statistics.RMSE(switch_n, 'switch_n', True)
 
         print('Objective: ' + str(obj))

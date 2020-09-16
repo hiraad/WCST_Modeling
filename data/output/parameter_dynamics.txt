@@ -1,0 +1,713 @@
+
+===========================
+
+Parameters: [0.9, 0.09, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.556260849725415
+Start_Means_Max: 17.671985286259137
+Start_STD_Min: 18.59798209757709
+Start_STD_Max: 19.385664031913812
+
+SWITCHES:
+Switch_Trials_Min: 6.547900426854397
+Switch_Trials_Max: 7.123903424387503
+Switch_Means_Min: 11.34787037095242
+Switch_Means_Max: 15.357419540184235
+Switch_STD_Min: 6.900842646800869
+Switch_STD_Max: 8.760930057328101
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.5, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.44187875788751
+Start_Means_Max: 17.643601247133773
+Start_STD_Min: 18.57461003967254
+Start_STD_Max: 19.326081349381894
+
+SWITCHES:
+Switch_Trials_Min: 6.809919235938118
+Switch_Trials_Max: 8.703447592764606
+Switch_Means_Min: 13.716086659557675
+Switch_Means_Max: 15.308099328031277
+Switch_STD_Min: 12.240457182369688
+Switch_STD_Max: 14.689940051006925
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.0001, 0.0005]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.532285837112784
+Start_Means_Max: 17.691332027370436
+Start_STD_Min: 18.59893406956735
+Start_STD_Max: 19.277648088888412
+
+SWITCHES:
+Switch_Trials_Min: 4.55521678957215
+Switch_Trials_Max: 6.031169040907409
+Switch_Means_Min: 9.269368013619568
+Switch_Means_Max: 11.405971322322191
+Switch_STD_Min: 11.963590999131142
+Switch_STD_Max: 13.54551075698808
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.02, 2.17]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.50001102693234
+Start_Means_Max: 17.641796030865848
+Start_STD_Min: 18.514906434829186
+Start_STD_Max: 19.33412883282781
+
+SWITCHES:
+Switch_Trials_Min: 13.865424623862047
+Switch_Trials_Max: 13.865424623862047
+Switch_Means_Min: 19.261244118695966
+Switch_Means_Max: 19.261244118695966
+Switch_STD_Min: 17.93994704562976
+Switch_STD_Max: 17.93994704562976
+
+===========================
+
+
+===========================
+
+Parameters: [0.90197876, 0.09971949, 3.70380517]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.582446039914217
+Start_Means_Max: 17.78072422775183
+Start_STD_Min: 18.560263886087615
+Start_STD_Max: 19.29695832337447
+
+SWITCHES:
+Switch_Trials_Min: 6.174544517614234
+Switch_Trials_Max: 7.314369419163897
+Switch_Means_Min: 11.505222660882055
+Switch_Means_Max: 15.009814087500436
+Switch_STD_Min: 6.726587927888336
+Switch_STD_Max: 8.325137111440378
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.9, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.52070875433733
+Start_Means_Max: 17.576211234348932
+Start_STD_Min: 18.59376194439089
+Start_STD_Max: 19.25363008286516
+
+SWITCHES:
+Switch_Trials_Min: 10.301698889018258
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 16.884229894180514
+Switch_Means_Max: 17.49046958018933
+Switch_STD_Min: 15.6910020955589
+Switch_STD_Max: 16.734041903886226
+
+===========================
+
+
+===========================
+
+Parameters: [0.1, 0.9, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.47316223615762
+Start_Means_Max: 17.805674868699693
+Start_STD_Min: 18.570637997886443
+Start_STD_Max: 19.285247777148633
+
+SWITCHES:
+Switch_Trials_Min: 6.708203932499369
+Switch_Trials_Max: 8.951256894984079
+Switch_Means_Min: 13.908947832667943
+Switch_Means_Max: 15.84839728178375
+Switch_STD_Min: 11.420649527766665
+Switch_STD_Max: 14.289388317194758
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.1, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.524508487763473
+Start_Means_Max: 17.769711972636188
+Start_STD_Min: 18.57036845837972
+Start_STD_Max: 19.316663201868696
+
+SWITCHES:
+Switch_Trials_Min: 6.6332495807108
+Switch_Trials_Max: 7.754031209635412
+Switch_Means_Min: 11.808320884341846
+Switch_Means_Max: 16.143305110178726
+Switch_STD_Min: 8.29625497732347
+Switch_STD_Max: 9.968112710626492
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.9, 0.1]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.517343370675363
+Start_Means_Max: 17.67729605516225
+Start_STD_Min: 18.56797906667119
+Start_STD_Max: 19.31884961820361
+
+SWITCHES:
+Switch_Trials_Min: 10.606601717798213
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 17.17771784215384
+Switch_Means_Max: 17.529677925615275
+Switch_STD_Min: 16.76774777030849
+Switch_STD_Max: 17.086017048939805
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.9, 0.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.38283420780546
+Start_Means_Max: 17.553628997388586
+Start_STD_Min: 18.525398159678733
+Start_STD_Max: 19.29075665552786
+
+SWITCHES:
+Switch_Trials_Min: 10.606601717798213
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 16.838030460294966
+Switch_Means_Max: 17.257368827726935
+Switch_STD_Min: 16.39994037457571
+Switch_STD_Max: 16.743161034389654
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.5, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.552102984218763
+Start_Means_Max: 17.633618122365004
+Start_STD_Min: 18.535529053352967
+Start_STD_Max: 19.29410074148093
+
+SWITCHES:
+Switch_Trials_Min: 6.6332495807108
+Switch_Trials_Max: 8.739279146474267
+Switch_Means_Min: 13.613884083078318
+Switch_Means_Max: 15.367453723309868
+Switch_STD_Min: 11.875913978265965
+Switch_STD_Max: 14.493860894932283
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.5, 0.1]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.54988641248934
+Start_Means_Max: 17.7482728023198
+Start_STD_Min: 18.57118969257265
+Start_STD_Max: 19.304015829976347
+
+SWITCHES:
+Switch_Trials_Min: 10.606601717798213
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 16.78848073930925
+Switch_Means_Max: 17.127072199512398
+Switch_STD_Min: 16.621314697828982
+Switch_STD_Max: 16.91759879691456
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.5, 0.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.495448509619766
+Start_Means_Max: 17.60859579293301
+Start_STD_Min: 18.56361136460996
+Start_STD_Max: 19.30815130327168
+
+SWITCHES:
+Switch_Trials_Min: 10.404326023342406
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 15.666489564379768
+Switch_Means_Max: 16.167967370505977
+Switch_STD_Min: 15.667424018696993
+Switch_STD_Max: 16.243101893194343
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.1, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.406175645509062
+Start_Means_Max: 17.681646282693794
+Start_STD_Min: 18.573056570285168
+Start_STD_Max: 19.27725551874175
+
+SWITCHES:
+Switch_Trials_Min: 4.527692569068709
+Switch_Trials_Max: 6.144102863722254
+Switch_Means_Min: 9.359432946954778
+Switch_Means_Max: 12.432558069729279
+Switch_STD_Min: 11.322865868439942
+Switch_STD_Max: 13.452177924948268
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.1, 0.1]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.574201633942163
+Start_Means_Max: 17.58603449934933
+Start_STD_Min: 18.55598735169305
+Start_STD_Max: 19.258217575142055
+
+SWITCHES:
+Switch_Trials_Min: 6.698880503487131
+Switch_Trials_Max: 8.12403840463596
+Switch_Means_Min: 13.539261893250723
+Switch_Means_Max: 14.034504062583046
+Switch_STD_Min: 15.94848418728126
+Switch_STD_Max: 16.411613970609192
+
+===========================
+
+
+===========================
+
+Parameters: [0.1, 0.5, 0.1]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.47316223615762
+Start_Means_Max: 17.642945215104458
+Start_STD_Min: 18.588222167986544
+Start_STD_Max: 19.331808880383676
+
+SWITCHES:
+Switch_Trials_Min: 10.606601717798213
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 16.778290595245966
+Switch_Means_Max: 17.206529303612218
+Switch_STD_Min: 16.549729660428117
+Switch_STD_Max: 16.84689338177453
+
+===========================
+
+
+===========================
+
+Parameters: [0.5, 0.1, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.442537631270277
+Start_Means_Max: 17.66232400950951
+Start_STD_Min: 18.575553241404563
+Start_STD_Max: 19.281420567068505
+
+SWITCHES:
+Switch_Trials_Min: 5.431390245600108
+Switch_Trials_Max: 6.937218462755804
+Switch_Means_Min: 10.723872026931318
+Switch_Means_Max: 14.882868007970378
+Switch_STD_Min: 8.769896383658871
+Switch_STD_Max: 11.533643627606146
+
+===========================
+
+
+===========================
+
+Parameters: [0.1, 0.5, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.484892248020117
+Start_Means_Max: 17.738320729175374
+Start_STD_Min: 18.542273965786045
+Start_STD_Max: 19.326784101544526
+
+SWITCHES:
+Switch_Trials_Min: 6.093028803476971
+Switch_Trials_Max: 8.344159634139318
+Switch_Means_Min: 13.403309587837304
+Switch_Means_Max: 15.55469431471886
+Switch_STD_Min: 11.199150963886634
+Switch_STD_Max: 14.23235851860467
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.9, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.38291036687537
+Start_Means_Max: 17.597653175667848
+Start_STD_Min: 18.513479716450938
+Start_STD_Max: 19.298462511522512
+
+SWITCHES:
+Switch_Trials_Min: 10.428326807307105
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 16.87431862793152
+Switch_Means_Max: 17.366509655670892
+Switch_STD_Min: 16.148481250646366
+Switch_STD_Max: 16.718984418189958
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.1, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.471964331954098
+Start_Means_Max: 17.631822902262527
+Start_STD_Min: 18.58517781936311
+Start_STD_Max: 19.295331589093724
+
+SWITCHES:
+Switch_Trials_Min: 5.488624600025037
+Switch_Trials_Max: 6.547900426854397
+Switch_Means_Min: 10.298077125446019
+Switch_Means_Max: 13.781817666713586
+Switch_STD_Min: 10.181797386815706
+Switch_STD_Max: 11.467816273529362
+
+===========================
+
+
+===========================
+
+Parameters: [0.1, 0.9, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.3839082667057
+Start_Means_Max: 17.643343440109025
+Start_STD_Min: 18.56495385698601
+Start_STD_Max: 19.272674711836896
+
+SWITCHES:
+Switch_Trials_Min: 6.928203230275509
+Switch_Trials_Max: 9.266876496425319
+Switch_Means_Min: 13.797129376109602
+Switch_Means_Max: 16.056788346421637
+Switch_STD_Min: 11.62509058572757
+Switch_STD_Max: 14.500153503547319
+
+===========================
+
+
+===========================
+
+Parameters: [0.7, 0.7, 3.1]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.566670997749014
+Start_Means_Max: 17.69699068011936
+Start_STD_Min: 18.553348872651103
+Start_STD_Max: 19.272036019939993
+
+SWITCHES:
+Switch_Trials_Min: 8.085480814398114
+Switch_Trials_Max: 9.714679613862724
+Switch_Means_Min: 14.524544028578454
+Switch_Means_Max: 16.077004371165593
+Switch_STD_Min: 12.687710159728999
+Switch_STD_Max: 15.140693327059326
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.0001, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.467322248719093
+Start_Means_Max: 17.667481302362532
+Start_STD_Min: 18.555127626085895
+Start_STD_Max: 19.27604840294985
+
+SWITCHES:
+Switch_Trials_Min: 4.898979485566356
+Switch_Trials_Max: 6.334429729659964
+Switch_Means_Min: 9.408693156603137
+Switch_Means_Max: 11.952829486101013
+Switch_STD_Min: 11.91714836917191
+Switch_STD_Max: 13.850468288292602
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.0001, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.49606283271
+Start_Means_Max: 17.56553399166404
+Start_STD_Min: 18.607291208820577
+Start_STD_Max: 19.30446949478568
+
+SWITCHES:
+Switch_Trials_Min: 4.769696007084728
+Switch_Trials_Max: 6.264982043070834
+Switch_Means_Min: 9.60064486816173
+Switch_Means_Max: 11.511939446470993
+Switch_STD_Min: 11.862480758332792
+Switch_STD_Max: 13.712970854066151
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.9, 0.0005]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.558560705708334
+Start_Means_Max: 17.684736864094127
+Start_STD_Min: 18.578943844711517
+Start_STD_Max: 19.254996152153662
+
+SWITCHES:
+Switch_Trials_Min: 10.606601717798213
+Switch_Trials_Max: 10.606601717798213
+Switch_Means_Min: 16.977619442978877
+Switch_Means_Max: 17.361393497455584
+Switch_STD_Min: 16.529356067999053
+Switch_STD_Max: 16.906868947961865
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.0001, 0.0005]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.544548240107307
+Start_Means_Max: 17.776996487940007
+Start_STD_Min: 18.601780416329774
+Start_STD_Max: 19.22385790027884
+
+SWITCHES:
+Switch_Trials_Min: 3.3354160160315836
+Switch_Trials_Max: 4.401704215414752
+Switch_Means_Min: 9.673045216335044
+Switch_Means_Max: 10.699546079567092
+Switch_STD_Min: 13.102795157546163
+Switch_STD_Max: 14.197465837884065
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.9, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.570546969924102
+Start_Means_Max: 17.604054448759648
+Start_STD_Min: 18.565573327548393
+Start_STD_Max: 19.307712552158407
+
+SWITCHES:
+Switch_Trials_Min: 7.185053931599957
+Switch_Trials_Max: 9.526279441628825
+Switch_Means_Min: 14.016973362557616
+Switch_Means_Max: 15.969296028283429
+Switch_STD_Min: 11.409784019744663
+Switch_STD_Max: 14.704258288635295
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.0001, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.43054144836686
+Start_Means_Max: 17.671386672611913
+Start_STD_Min: 18.456988746539963
+Start_STD_Max: 19.3045864080078
+
+SWITCHES:
+Switch_Trials_Min: 13.865424623862047
+Switch_Trials_Max: 13.865424623862047
+Switch_Means_Min: 19.261244118695966
+Switch_Means_Max: 19.261244118695966
+Switch_STD_Min: 17.93994704562976
+Switch_STD_Max: 17.93994704562976
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.9, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.55942176100269
+Start_Means_Max: 17.612305571101242
+Start_STD_Min: 18.561728880127937
+Start_STD_Max: 19.34084953354699
+
+SWITCHES:
+Switch_Trials_Min: 7.176350047203662
+Switch_Trials_Max: 9.72753822917186
+Switch_Means_Min: 13.981801728406428
+Switch_Means_Max: 15.985204415316126
+Switch_STD_Min: 11.48058406469795
+Switch_STD_Max: 14.801767098042118
+
+===========================
+
+
+===========================
+
+Parameters: [0.9, 0.0001, 2.5]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.471807627990227
+Start_Means_Max: 17.647896332777226
+Start_STD_Min: 18.58127741572603
+Start_STD_Max: 19.229623030861077
+
+SWITCHES:
+Switch_Trials_Min: 13.865424623862047
+Switch_Trials_Max: 13.865424623862047
+Switch_Means_Min: 19.261244118695966
+Switch_Means_Max: 19.261244118695966
+Switch_STD_Min: 17.93994704562976
+Switch_STD_Max: 17.93994704562976
+
+===========================
+
+
+===========================
+
+Parameters: [0.0001, 0.9, 4.9]
+
+STARTS:
+Start_Trials_Min: 1.5
+Start_Trials_Max: 1.5
+Start_Means_Min: 16.5496494196609
+Start_Means_Max: 17.595025929664462
+Start_STD_Min: 18.4983729383751
+Start_STD_Max: 19.2383537584807
+
+SWITCHES:
+Switch_Trials_Min: 6.882949948968102
+Switch_Trials_Max: 9.48024261292927
+Switch_Means_Min: 13.945413586854036
+Switch_Means_Max: 16.052406909953916
+Switch_STD_Min: 11.548013620888423
+Switch_STD_Max: 14.556812384898029
+
+===========================
+
