@@ -11,6 +11,9 @@ Dimensions and CardsKeys and their assigned numeric values:
     1: Blue		1: Empty	1: Contain  		1: Top
     2: Red		2: Full	    2: Partial overlap	2: Middle
     3: Yellow	3: Semi	    3: Disconnected		3: Bottom
+    
+Total Number Of Cards (Excluding Piles) = 78
+Max No. of Trials = 156 (Each card is dealt twice)
 
 Free Parameters: 
 
@@ -67,8 +70,8 @@ def simulate(exp, par: [], save=False):
     # print(exp.id)
     # Model's three Vectors
     a = np.array([0.25, 0.25, 0.25, 0.25])
-    m = np.zeros((len(exp.card_order), 4), float)
-    s = np.zeros((len(exp.card_order), 4), float)
+    m = np.zeros((len(exp.card_order)*2, 4), float)
+    s = np.zeros((len(exp.card_order)*2, 4), float)
 
     # MODEL'S PARAMETERS:
     r = par[0]
@@ -81,11 +84,11 @@ def simulate(exp, par: [], save=False):
     total_streaks = 0
     rows = []
 
-    for t in range(0, len(exp.card_order)):
+    for t in range(0, len(exp.card_order)*2):
 
         card_dimensions = exp.deal_card()
         if card_dimensions is None:
-            print(f"Total Streaks: {total_streaks}")
+            # print(f"Total Streaks: {total_streaks}")
             break
         selected_criterion = select_criterion(a)
         k, _ = Subject.select_pile(card_dimensions, selected_criterion)
@@ -129,6 +132,8 @@ def simulate(exp, par: [], save=False):
                 # print("All dimensions have been sorted to, The task is Done.")
                 rows.append(row)
                 break
+        else:
+            row.append(None)
         rows.append(row)
 
     results_df = pd.DataFrame(rows, columns=['trial', 'card', 'demanded_criterion', 'selected_criterion', 'feedback',
@@ -138,5 +143,7 @@ def simulate(exp, par: [], save=False):
         create_path(df_path)
         results_df.to_csv(os.path.join(df_path, f'{exp.id}.csv'), index=False)
         print(f"Results for {exp.id}.csv successfully saved.\n")
+
     exp.reset_experiment()
+
     return results_df

@@ -1,8 +1,8 @@
 from time import sleep
 from tqdm import tqdm
 import numpy as np
-import random
 import pickle
+import random
 import json
 import os
 
@@ -28,6 +28,17 @@ def clear_directory(p):
         os.remove(os.path.join(p, obj))
 
 
+def save_obj(obj, name):
+    with open(os.path.join('data', 'output', 'pickle', f'{name}.pkl'), 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+        print(f"'{type(obj).__name__}' Object successfully saved to drive as {name}.pkl")
+
+
+def load_obj(name):
+    with open(os.path.join('data', 'output', 'pickle', f'{name}.pkl'), 'rb') as f:
+        return pickle.load(f)
+
+
 class Experiment:
 
     # Experiment setup data from the original study:
@@ -44,22 +55,48 @@ class Experiment:
         self.criterion_order = criterion_order
         self.pile_order = pile_order
         self.trial = 0
+        self.card_num = 0
+        self.lap = False
         self.criterion_index = 0
         self.demanded_criterion = criterion_order[self.criterion_index]
 
+    @staticmethod
+    def setup_experiment(save=False):
+        for subject in tqdm(range(0, len(Experiment.base_decks)), desc='Loading the Experiment: '):
+            sleep(.01)
+            card_order = Experiment.base_decks[subject]
+            criterion_order = Experiment.base_criteria[subject]
+            pile_order = Experiment.base_piles[subject]
+            exp = Experiment(subject + 1, card_order, criterion_order, pile_order)
+            Experiment.instances[f'{subject + 1}'] = exp
+            if save:
+                with open(os.path.join(Experiment.instance_path, f'{subject + 1}.pickle'), 'wb') as pickle_dump:
+                    pickle.dump(exp, pickle_dump)
+        print('\nExperiment Loaded Successfully.\n')
+        return Experiment.instances
+
     def reset_experiment(self):
         self.trial = 0
+        self.card_num = 0
+        self.lap = False
         self.criterion_index = 0
         self.demanded_criterion = self.criterion_order[self.criterion_index]
 
     def deal_card(self):
         self.trial += 1
-        try:
-            current_card = self.card_order[self.trial - 1]
-            card_dimensions = card_codes[current_card]
+        self.card_num += 1
+        if self.card_num <= len(self.card_order):
+            current_card = self.card_order[self.card_num - 1]
+            card_dimensions = card_codes[current_card-1]
             return card_dimensions
-        except:
-            print("No More CARDS, Task is done!!")
+        elif not self.lap:
+            self.card_num = 1
+            self.lap = True
+            current_card = self.card_order[self.card_num - 1]
+            card_dimensions = card_codes[current_card-1]
+            return card_dimensions
+        else:
+            # print("No More CARDS, Task is done!!")
             return None
 
     def check_criterion(self, cur_card: [], selected_pile: [], c: int):
@@ -80,6 +117,8 @@ class Experiment:
         else:
             return None
 
+    # Deprecated:
+
     @staticmethod
     def load_experiment(subject):
         instance = os.path.join(Experiment.instance_path, f'{subject}.pickle')
@@ -90,21 +129,6 @@ class Experiment:
             print(f"No instance for class {subject} was found! Make sure you have setup experiments for all "
                   f"subjects at least once.")
         return exp
-
-    @staticmethod
-    def setup_experiment(save=False):
-        for subject in tqdm(range(0, len(Experiment.base_decks)), desc='Loading the Experiment: '):
-            sleep(.01)
-            card_order = Experiment.base_decks[subject]
-            criterion_order = Experiment.base_criteria[subject]
-            pile_order = Experiment.base_piles[subject]
-            exp = Experiment(subject+1, card_order, criterion_order, pile_order)
-            Experiment.instances[f'{subject+1}'] = exp
-            if save:
-                with open(os.path.join(Experiment.instance_path, f'{subject+1}.pickle'), 'wb') as pickle_dump:
-                    pickle.dump(exp, pickle_dump)
-        print('\nExperiment Loaded Successfully.\n')
-        return Experiment.instances
 
 
 criterions = [0, 1, 2, 3]
