@@ -152,7 +152,7 @@ def main():
 
     '''
     6. Calculate base results and statistics from the reformatted Experiment datasets.
-    after a run the both objects are stored as a pickle in the output directory.
+    Note: after a run the both objects are stored as a pickle in the output directory.
     '''
 
     # exp_df_path = os.path.join('data', 'input', 'original_formatted')
